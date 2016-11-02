@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<!-- data source -->
+	<bean id="dataSource" destroy-method="close"
+		class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="${zbdispatch.db.driver}" />
+		<property name="url" value="${zbdispatch.db.url}" />
+		<property name="username" value="${zbdispatch.db.username}" />
+		<property name="password" value="${zbdispatch.db.password}" />
+		<property name="initialSize" value="${zbdispatch.db.initialSize}" />
+		<property name="maxActive" value="${zbdispatch.db.maxActive}" />
+		<property name="minIdle" value="${zbdispatch.db.minIdle}" />
+		<property name="maxWait" value="${zbdispatch.db.maxWait}" />
+		<property name="queryTimeout" value="${zbdispatch.db.queryTimeout}" />
+		<!--  
+		<property name="transactionQueryTimeout" value="${zbdispatch.db.transactionQueryTimeout}" />
+		<property name="removeAbandoned" value="${zbdispatch.db.removeAbandoned}" />
+		<property name="removeAbandonedTimeoutMillis" value="${zbdispatch.db.removeAbandonedTimeoutMillis}" />
+		-->
+		<!-- StatFilter，用于统计监控信息 -->
+		<property name="filters" value="stat" />
+	</bean>
+
+	<!-- transaction manager -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- define the SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="plugins">
+			<!-- page plugin -->
+			<array>
+				<bean class="com.github.pagehelper.PageHelper">
+					<property name="properties">
+						<value>
+							dialect=mysql
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+	
+	<!-- scan mapper package -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- mapper的目录, 该目录下不能包含其它的文件, 多个目录用逗号隔开 -->
+		<property name="basePackage" value="com.e.framework.**.mapper"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+
+	<!-- enable transaction demarcation with annotations -->
+	<tx:annotation-driven />	
+	
+</beans>

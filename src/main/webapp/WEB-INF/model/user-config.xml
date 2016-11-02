@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model namespace="com.e.framework.user">
+	<ipml>com.e.framework.user.impl.UserImpl</ipml>
+	<manager>com.e.framework.user.impl.UserStepSource</manager>
+</model>
