@@ -1,5 +1,7 @@
-1.web-info/model/user-config.xml  //模块化配置文件
-2.在com.e.framework下加入子模块,比如com.e.framework.user
-3.user-sqlmap.xml 放到子模块下的根目录下
-4.t_main_order_info.xml对应文件放到子目录model下
+a)	com.e.framework/主包名
+b)	com.e.framewrok.user/ user 主工程的容器
+c)	web-inf/model 模块下为每个模块的主配置文件，框架根据此配置文件去加载模块信息
+d)	扫描主工程下各个模块的mapper映射文件荚，无需理性主框架里的mapper映射
+
+
 				
